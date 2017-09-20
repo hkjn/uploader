@@ -30,7 +30,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		path.Base(html.EscapeString(r.URL.Path)),
 	)
 	buf := bufio.NewReaderSize(r.Body, 1000)
-	f, err := os.OpenFile(p, os.O_RDWR|os.O_CREATE, 0600)
+	f, err := os.OpenFile(p, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		log.Printf("Failed to write %q: %v\n", p, err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
