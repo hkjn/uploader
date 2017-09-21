@@ -4,7 +4,6 @@ declare BASE_DIR=$( cd $( dirname ${BASH_SOURCE[0]} ) && pwd )
 declare CPU_ARCH=$(uname -m)
 declare BUILD_IMAGE=hkjn/golang:${CPU_ARCH}
 declare BUILD_DIR=$(mktemp -d /tmp/uploader_buildXXXX)
-declare NO_PUSH=${NO_PUSH:-""}
 
 cd ${BASE_DIR}
 sed "s|{{ARG_FROM}}|${BUILD_IMAGE}|" Dockerfile.build > ${BUILD_DIR}/Dockerfile
@@ -12,4 +11,4 @@ cp -vr *.go vendor ${BUILD_DIR}/
 docker build -t uploader-build ${BUILD_DIR}
 docker run --rm -v ${BASE_DIR}:/build uploader-build
 rm -rf ${BUILD_DIR}
-[[ "$NO_PUSH" ]] || docker push ${TAG}
+sudo setcap cap_net_bind_service=+ep uploader
