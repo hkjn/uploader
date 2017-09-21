@@ -38,6 +38,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 	// TODO: Do read-write loop until EOF, to avoid allocating entire buf at once during Copy?
 	n, err := io.Copy(f, buf)
+	if n == 0 {
+		log.Printf("Empty body from client, nothing to write.\n")
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
 	log.Printf("Wrote %d bytes to %q\n", n, p)
 	if err := f.Close(); err != nil {
 		log.Printf("Failed to close %q file: %v\n", p, err)
